@@ -1,5 +1,5 @@
 {
-  "name": "mizhar-app",
+  "name": "mizhar-ai",
   "version": "2.0.0",
   "description": "MIZHAR AI - AI-powered business intelligence platform for founders",
   "private": true,
@@ -7,8 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "lint": "next lint"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -16,8 +15,7 @@
     "next": "^14.0.0",
     "@supabase/supabase-js": "^2.38.0",
     "@supabase/auth-helpers-nextjs": "^0.7.5",
-    "nodemailer": "^6.9.0",
-    "crypto": "^1.0.3"
+    "nodemailer": "^6.9.0"
   },
   "devDependencies": {
     "typescript": "^5.2.0",
@@ -25,8 +23,7 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "eslint": "^8.48.0",
-    "eslint-config-next": "^14.0.0",
-    "prettier": "^3.0.0"
+    "eslint-config-next": "^14.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
