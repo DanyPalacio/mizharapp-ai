@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mizhar-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Volumes/MUSIC USB-C/MIZHAR/mizhar-app' && npm run dev"],
+      "port": 3000
+    }
+  ]
+}
