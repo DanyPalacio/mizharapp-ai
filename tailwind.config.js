@@ -1,28 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}"
+  ],
   theme: {
     extend: {
       colors: {
-        'mz-orange':    '#FF6A00',
-        'mz-orange-600':'#E55F00',
-        'mz-graphite':  '#1A1F24',
-        'mz-cloud':     '#F5F6F7',
-        'mz-ink':       '#1A1F24',
-        'mz-ink-2':     '#4A5159',
-        'mz-ink-3':     '#6E757D',
-        'mz-border':    '#DADDE1',
-        'mz-border-2':  '#E8EAED',
-        'mz-success':   '#1F8A5B',
-        'mz-warning':   '#C77700',
-        'mz-danger':    '#C0392B',
+        ink: "#1A1F24",
+        ember: "#FF6A00",
+        cloud: "#F5F6F7",
+        line: "#DADDE1",
+        navy: "#0B1437",
+        signal: "#3D6DFF"
       },
       fontFamily: {
-        display: ['Satoshi', 'Space Grotesk', 'system-ui', 'sans-serif'],
-        body:    ['Inter', 'SF Pro', 'system-ui', 'sans-serif'],
-        mono:    ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        display: ["var(--font-display)", "sans-serif"],
+        body: ["var(--font-body)", "sans-serif"]
       },
-    },
+      boxShadow: {
+        card: "0 1px 2px rgba(26,31,36,.05), 0 8px 24px rgba(26,31,36,.06)",
+        deck: "0 24px 64px rgba(11,20,55,.18)"
+      }
+    }
   },
-  plugins: [],
-}
+  plugins: []
+};
