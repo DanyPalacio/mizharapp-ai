@@ -11,6 +11,8 @@ const NAV = [
   { href: "/venture/investor-deck", label: "Investor Deck", icon: "▣" }
 ];
 
+import ProGate from "@/components/ProGate";
+
 export default function VentureLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
@@ -21,6 +23,7 @@ export default function VentureLayout({ children }: { children: React.ReactNode 
             Strategic Intelligence
           </div>
         </div>
+        <a href="/venture/new" className="mx-3 mb-2 flex items-center justify-center gap-2 bg-ember text-white rounded-lg py-2.5 text-sm font-semibold hover:opacity-90 transition">+ Nuevo análisis</a>
         <nav className="flex-1 px-3 space-y-1">
           {NAV.map(n => (
             <a key={n.href} href={n.href}
@@ -33,7 +36,7 @@ export default function VentureLayout({ children }: { children: React.ReactNode 
           <a href="/pricing" className="block text-center btn-ember text-sm">Upgrade to Pro</a>
         </div>
       </aside>
-      <div className="flex-1 bg-cloud">{children}</div>
+      <div className="flex-1 bg-cloud"><ProGate />{children}</div>
     </div>
   );
 }

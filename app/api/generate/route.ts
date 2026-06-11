@@ -33,6 +33,31 @@ function parseSpreadsheet(buf: Buffer, name: string): string {
   return `Archivo: ${name}\n${sheets.join("\n\n")}`;
 }
 
+async function checkLimits(req: NextRequest, hasFile: boolean) {
+  // Límites del spec: Free = 1 dashboard/día y 2 archivos/día; Pro = ilimitado/20 archivos.
+  const auth = req.headers.get("authorization");
+  if (!auth?.startsWith("Bearer ")) return { ok: true, userId: null }; // anónimo: probar 1 vez (sin persistencia)
+  const db = serviceClient();
+  const { data: { user } } = await db.auth.getUser(auth.slice(7));
+  if (!user) return { ok: true, userId: null };
+  const { data: profile } = await db.from("profiles").select("plan,role").eq("id", user.id).single();
+  const isPro = profile?.plan === "pro" || profile?.role === "admin";
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: usage } = await db.from("user_usage").select("*")
+    .eq("user_id", user.id).eq("usage_date", today).single();
+  const dash = usage?.dashboards_generated ?? 0;
+  const files = usage?.files_uploaded ?? 0;
+  if (!isPro && dash >= 1) return { ok: false, userId: user.id, error: "Límite del plan Free: 1 dashboard por día. Upgrade a Pro para dashboards ilimitados." };
+  if (hasFile && ((!isPro && files >= 2) || (isPro && files >= 20)))
+    return { ok: false, userId: user.id, error: isPro ? "Límite Pro: 20 archivos por día." : "Límite Free: 2 archivos por día. Upgrade a Pro." };
+  await db.from("user_usage").upsert({
+    user_id: user.id, usage_date: today,
+    dashboards_generated: dash + 1,
+    files_uploaded: files + (hasFile ? 1 : 0)
+  }, { onConflict: "user_id,usage_date" });
+  return { ok: true, userId: user.id };
+}
+
 export async function POST(req: NextRequest) {
   try {
     let prompt = "";
@@ -78,6 +103,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Prompt requerido" }, { status: 400 });
     }
 
+    const lim = await checkLimits(req, mode !== "prompt_only");
+    if (!lim.ok) return NextResponse.json({ error: lim.error }, { status: 429 });
+
     const msg = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 6000,
@@ -90,6 +118,7 @@ export async function POST(req: NextRequest) {
 
     const db = serviceClient();
     const { error } = await db.from("dashboards").insert({
+      user_id: lim.userId,
       title: dashboard.title,
       slug: dashboard.slug,
       prompt,
